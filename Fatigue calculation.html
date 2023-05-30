@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Fatigue Calculator</title>
+</head>
+
+<body>
+  <header>
+    <div class="nav-container">
+      <img src="sce.png" alt="College Logo" id="college-logo">
+      <nav>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#moher-circle">מעגל מוהר</a></li>
+          <li><a href="#failure-criteria">קריטריוני כשל</a></li>
+          <li><a href="#fatigue">התעייפות</a></li>
+          <li><a href="#failure-fatigue-criteria">קריטריוני כשל להתעייפות </a></li>
+          <li><a href="#wave'">גלים</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div id="calculator-container">
+    <h1>מקדם התעייפות</h1>
+    <div id="input-container">
+      <div class="input-field">
+        <label for="sigma_uts">Sigma UTS:</label>
+        <input type="number" id="sigma_uts" name="sigma_uts" placeholder="[MPa]">
+      </div>
+      <div class="flex-container">
+        <div class="input-field">
+          <h3>Production Method</h3>
+          <div class="method-container">
+            <select id="method" name="method" onchange="calculateKa()">
+              <option value="machined_and_cold_drawn">Machined and Cold Drawn</option>
+              <option value="hot_rolled">Hot Rolled</option>
+              <option value="forged">Forged</option>
+              <option value="ground">Ground</option>
+              <option value="polished">Polished</option>
+              <option value="other">Other</option>
+            </select>
+            <label for="other-ka" class="ka-label" style="display: none;">Ka =</label>
+            <input type="number" id="other-ka" name="other-ka" placeholder="Enter Ka" style="display: none;">
+          </div>
+          <div class="table-container">
+            <table class="table-style">
+              <tr>
+                <td colspan="2" class="table-title">Ka Calculation</td>
+              </tr>
+              <tr>
+                <th>Production Method</th>
+                <th>Ka Value</th>
+              </tr>
+              <tr>
+                <td>Machined and Cold Drawn</td>
+                <td>4.51 * σ<sub>uts</sub><sup>-0.265</sup></td>
+              </tr>
+              <tr>
+                <td>Hot Rolled</td>
+                <td>57.7 * σ<sub>uts</sub><sup>-0.718</sup></td>
+              </tr>
+              <tr>
+                <td>Forged</td>
+                <td>272 * σ<sub>uts</sub><sup>-0.995</sup></td>
+              </tr>
+              <tr>
+                <td>Ground</td>
+                <td>1.58 * σ<sub>uts</sub><sup>-0.085</sup></td>
+              </tr>
+              <tr>
+                <td>Polished</td>
+                <td>1 * σ<sub>uts</sub><sup>0</sup></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="input-field">
+          <h3 for="material">Material:</h3>
+          <select id="material" name="material">
+            <option value="steel">Steel</option>
+            <option value="cast_iron">Cast Iron</option>
+            <option value="cast_aluminium">Cast Aluminium</option>
+          </select>
+          <div class="table-container">
+            <table id="material-table" class="table-style">
+              <tr>
+                <td colspan="2" class="table-title">Se<sup>'</sup> Calculation</td>
+              <tr>
+                <th>Material Type</th>
+                <th>Se<sup>'</sup> Value</th>
+              </tr>
+              <tr>
+                <td>Steel</td>
+                <td>σ<sub>uts</sub> * 0.5</td>
+              </tr>
+              <tr>
+                <td>Cast Iron</td>
+                <td>σ<sub>uts</sub> * 0.4</td>
+              </tr>
+              <tr>
+                <td>Cast Aluminium</td>
+                <td>σ<sub>uts</sub> * 0.3</td>
+              </tr>
+            </table>
+          </div>
+        </div>        
+      </div>
+      <div class="flex-container">
+        <div class="flex-item">
+          <div class="input-field">
+            <label for="diameter">Diameter (d):</label>
+            <input type="number" id="diameter" name="diameter" placeholder="[mm]" oninput="calculateKb()">
+            <div class="table-container">
+              <table class="table-style">
+                <tr>
+                  <td colspan="2" class="table-title">Kb Calculation</td>
+                </tr>
+                <tr>
+                  <th>Diameter</th>
+                  <th>Kb Value</th>
+                </tr>
+                <tr>
+                  <td>d ≤ 7.5 mm</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>7.5 < d ≤ 50 mm</td>
+                  <td>0.85</td>
+                </tr>
+                <tr>
+                  <td>d > 50 mm</td>
+                  <td>0.75</td>
+                </tr>
+              </table>
+            </div>
+            <div id="kb-container" class="formula-container"></div>
+          </div>
+        </div>
+        <div class="flex-item">
+          <div class="input-field">
+            <label for="temperature">Temperature (T):</label>
+            <input type="number" id="temperature" name="temperature" placeholder="[ºC]" oninput="updateFormulas()">
+            <div class="table-container">
+              <table class="table-style">
+                <tr>
+                  <td colspan="2" class="table-title">Kd Calculation</td>
+                </tr>
+                <tr>
+                  <th>Temperature Range</th>
+                  <th>Kd Value</th>
+                </tr>
+                <tr>
+                  <td>T ≥ 450°C</td>
+                  <td>1 - (0.00576T + 27.74)</td>
+                </tr>
+                <tr>
+                  <td>T &lt; 450°C</td>
+                  <td>1</td>
+                </tr>
+              </table>
+            </div>
+            <div id="kd-container" class="formula-container"></div>
+          </div>
+        </div>
+        <div class="flex-item">
+          <div class="input-field">
+            <label for="reliability">Reliability (R):</label>
+            <input type="number" id="reliability" name="reliability" placeholder="%" oninput="updateFormulas()">
+            <div class="table-container">
+              <table class="table-style">
+                <tr>
+                  <td colspan="2" class="table-title">Ke Calculation</td>
+                </tr>
+                <tr>
+                  <th>Reliability Percentage</th>
+                  <th>Ke Value</th>
+                </tr>
+                <tr>
+                  <td>R = 50%</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>R = 90%</td>
+                  <td>0.897</td>
+                </tr>
+                <tr>
+                  <td>R = 95%</td>
+                  <td>0.868</td>
+                </tr>
+                <tr>
+                  <td>R = 99%</td>
+                  <td>0.814</td>
+                </tr>
+                <tr>
+                  <td>R = 99.9%</td>
+                  <td>0.753</td>
+                </tr>
+                <tr>
+                  <td>R = 99.99%</td>
+                  <td>0.702</td>
+                </tr>
+                <tr>
+                  <td>R = 99.999%</td>
+                  <td>0.659</td>
+                </tr>
+              </table>
+            </div>
+            <div id="ke-container" class="formula-container"></div>
+          </div>
+        </div>
+        <div class="flex-item">
+          <div class="input-field">
+            <label for="load">Way of Loading The Force:</label>
+            <select id="load" name="load">
+              <option value="bending">Bending</option>
+              <option value="axial">Axial</option>
+              <option value="torsion">Torsion</option>
+            </select>
+            <div class="table-container">
+              <table class="table-style">
+                <tr>
+                  <td colspan="2" class="table-title">Kc Calculation</td>
+                </tr>
+                <tr>
+                  <th>Load Type</th>
+                  <th>Kc Value</th>
+                </tr>
+                <tr>
+                  <td>Bending</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Axial</td>
+                  <td>0.85</td>
+                </tr>
+                <tr>
+                  <td>Torsion</td>
+                  <td>0.59</td>
+                </tr>
+              </table>
+            </div>
+            <div id="kc-container" class="formula-container"></div>
+          </div>
+        </div>
+      </div>
+      <button class="myButton" type="button" onclick="Se()">Calculate</button>
+    </div>
+    <div id="output-container" class="result-container">
+      <div class="output-field">
+        <label for="output">Result:</label>
+        <output id="output"></output>
+      </div>
+    </div>
+  </div>
+  <script src="FatigueCalculator.js"></script>
+</body>
+
+</html>

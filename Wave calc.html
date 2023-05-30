@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.8/xlsx.full.min.js"></script>
+	<script src="https://unpkg.com/mathjs/lib/browser/math.js"></script>
+	<link rel="stylesheet" href="styles.css">
+	<title>Wave Calculation Tool</title>
+	<script src="Wave calc.js"></script>
+</head>
+<body>
+	<header>
+		<div class="nav-container">
+		  <img src="sce.png" alt="College Logo" id="college-logo">
+		  <nav>
+			<ul>
+				<li><a href="#home">Home</a></li>
+				<li><a href="#moher-circle">מעגל מוהר</a></li>
+				<li><a href="#failure-criteria">קריטריוני כשל</a></li>
+				<li><a href="#fatigue">התעייפות</a></li>
+				<li><a href="#failure-fatigue-criteria">קריטריוני כשל להתעייפות </a></li>
+				<li><a href="#wave'">גלים</a></li>
+			</ul>
+		  </nav>
+		</div>
+	  </header>
+<div class="input-field">
+	<h1>Wave Calculation Tool</h1>
+	<label for="target">Choose what you are looking to calculate:</label><br>
+	<div class="flex-row">
+		<div class="radio-input">
+		  <input type="radio" name="target" value="fs_check" onchange="toggletarget(1)">
+		  <label for="ground">fs</label>
+		  <input type="radio" name="target" value="d_check" onchange="toggletarget(2)">
+		  <label for="ground">d</label>
+		</div>
+	</div><br> 
+	<div id="inputtarger1" style="display:none" >
+		<label for="fs">fs:</label>
+		<input type="number" id="fs">
+	</div>
+	<div id="inputtarget2" style="display:none" >
+		<label for="d">d:</label>
+		<input type="number" id="d">
+	</div><br> 
+
+	<label for="method">Method:</label><br>
+	<div class="flex-row">
+		<div class="radio-input">
+			<input type="radio" name="method" value="goodman" onchange="togglemethod(1)">
+			<label for="goodman">Goodman</label>
+			<input type="radio" name="method" value="gerber" onchange="togglemethod(1)">
+			<label for="gerber">Gerber</label>
+			<input type="radio" name="method" value="soderberg" onchange="togglemethod(2)">
+			<label for="soderberg">Soderberg</label><br><br>
+		</div> 
+	</div><br>
+	<div id="inputmethod1"  style="display:none">
+        <label for="Syt">Syt:</label>
+        <input type="number" id="Syt"><br><br>
+    </div>
+	
+	<div id="inputmethod2" style="display:none">
+        <label for="Sut">Sut:</label>
+        <input type="number" id="Sut"><br><br>
+    </div>
+	
+	<div class="flex-container">	
+		<label for="Se">Se:</label>
+		<input type="number" id="Se" name="Se">
+	</div>
+	
+	<div class="flex-container">	
+		<div class="section">
+			<p>Loads:</p>
+			<div class="flex-row">
+				<div class="radio-input">
+					<div class="radio-item">
+						<input type="radio" name="MaxMinMA" id="MaxMinMA" value="MaxMin_check" onchange="toggleMaxMinMA(1)">
+						<label for="MaxMin_check">Max - Min</label>
+					</div>
+					<div class="radio-item">
+						<input type="radio" name="MaxMinMA" id="MaxMinMA" value="MA_check" onchange="toggleMaxMinMA(2)">
+						<label for="MA_check">M - A</label>
+					</div>
+				</div> 
+			</div>			
+			<div id="inputMaxMin" style="display:none" class="table-container">
+        		<table style="width:50%" class="table-style">
+					<tr>
+		  				<td>T max</td>
+		  				<td>M max</td>
+					</tr>
+					<tr>
+						<td><input type="number" id="Tmax" name="Tmax"></td>
+						<td><input type="number" id="Mmax" name="Mmax"></td>
+					</tr>
+					<tr>
+						<td>T min</td>
+		  				<td>M min</td>
+					</tr>
+					<tr>
+						<td><input type="number" id="Tmin" name="Tmin"></td>
+						<td><input type="number" id="Mmin" name="Mmin"></td>
+					</tr>
+				</table>
+    		</div>
+	
+			<div id="inputAM" style="display:none" class="table-container">
+        		<table style="width:50%" class="table-style">
+					<tr>
+		  				<td>Tm</td>
+		  				<td>Mm</td>
+					</tr>
+					<tr>
+						<td><input type="number" id="Tm" name="Tm"></td>
+						<td><input type="number" id="Mm" name="Mm"></td>
+					</tr>
+					<tr>
+						<td>Ta</td>
+		  				<td>Ma</td>
+					</tr>
+					<tr>
+						<td><input type="number" id="Ta" name="Ta"></td>
+						<td><input type="number" id="Ma" name="Ma"></td>
+					</tr>
+				</table>
+    		</div>
+		</div>
+	<div class="flex-container">
+		<div class="section">
+			<div class="flex-row">
+				<p>Mechanical Properties:</p>
+				<div class="radio-input">
+					<div class="radio-item">
+						<input type="radio" name="KtKf" id="KtKf" value="Kt_check" onchange="toggleKtKf(2)">
+						<label for="Kt_check">Kt</label>
+					</div>
+					<div class="radio-item">
+						<input type="radio" name="KtKf" id="KtKf" value="Kf_check" onchange="toggleKtKf(1)">
+						<label for="Kf_check">Kf</label>
+					</div>
+				</div>
+			</div>
+			<div id="inputKt" class="table-container" style="display:none">
+				<table style="width:50%" class="table-style">
+					<tr>
+						  <td>q</td>
+						  <td>qs</td>
+					</tr>
+					<tr>
+						<td><input type="number" id="q" name="q"></td>
+						<td><input type="number" id="qs" name="qs"></td>
+					</tr>
+					<tr>
+						<td>Kt</td>
+						  <td>Kts</td>
+					</tr>
+					<tr>
+						<td><input type="number" id="Kt" name="Kt"></td>
+						<td><input type="number" id="Kts" name="Kts"></td>
+					</tr>
+					<tr>
+						<td><button onclick="Kf()">Calculate</button></td>
+						<td><button onclick="Kfs()">Calculate</button></td>
+					</tr>
+					<tr>
+						<td>Kf: <span id="Kf_result"></span></td>
+						<td>Kfs: <span id="Kfs_result"></span></td>
+					</tr>
+				</table>
+			</div>
+			<div id="inputKf" class="table-container" style="display:none">
+				<table style="width:50%" class="table-style">
+					<tr>
+						  <td>Kf</td>
+						  <td>Kfs</td>
+					</tr>
+					<tr>
+						<td><input type="number" id="Kf" name="Kf"></td>
+						<td><input type="number" id="Kfs" name="Kfs"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	</div>
+
+	<button class="myButton" onclick="calculate()">Calculate</button><br><br>
+	<p id="result"></p>
+</div>	
+</body>
+</html>
