@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <title>Fatigue Failure Criteria Calculator</title>
+</head>
+
+<body>
+  <header>
+    <div class="nav-container">
+      <img src="sce.png" alt="College Logo" id="college-logo">
+      <nav>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#moher-circle">מעגל מוהר</a></li>
+          <li><a href="#failure-criteria">קריטריוני כשל</a></li>
+          <li><a href="#fatigue">התעייפות</a></li>
+          <li><a href="#failure-fatigue-criteria">קריטריוני כשל להתעייפות </a></li>
+          <li><a href="#wave">גלים</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div id="calculator-container">
+    <h1>קריטריוני כשל והתעייפות</h1>
+      <label for="sigma_a">&sigma; <sub>a</sub> [MPa]:</label><br>
+      <input type="number" id="sigma_a" name="sigma_a" required><br>
+      <label for="sigma_m">&sigma; <sub>m</sub> [MPa]:</label><br>
+      <input type="number" id="sigma_m" name="sigma_m" required><br>
+      <label for="sigma_uts">&sigma; <sub>uts</sub> [MPa]:</label><br>
+      <input type="number" id="sigma_uts" name="sigma_uts" required><br>
+      <label for="sigma_yield">&sigma; <sub>Yield</sub> [MPa]:</label><br>
+      <input type="number" id="sigma_yield" name="sigma_yield" required><br>
+      <label for="Se">S <sub>e</sub> [MPa]:</label><br>
+      <input type="number" id="Se" name="Se" required><br>
+      <label for="FS">FS </label><br>
+      <input type="number" id="FS" name="FS" required><br>
+      <br>
+      <button type="button" onclick="calculate()">Calculate</button>
+  </div> 
+  <script src="FatigueFailureCriteria.js"></script>
+  <div id="myDiv"></div>
+</body>
+
+</html>
